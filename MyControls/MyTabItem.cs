@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Collections;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -62,16 +63,29 @@ namespace MyControls
                 && VisualTreeHelper.GetParent(tabPanel) is Grid grid
                 && VisualTreeHelper.GetParent(grid) is MyTabControl tabControl)
             {
-                int sourceIndex = tabControl.Items.IndexOf(tabItemSource);
-                int targetIndex = tabControl.Items.IndexOf(tabItemTarget);
+                if (tabControl.ItemsSource is IList list)
+                {
+                    var source = tabItemSource.Content;
+                    var target = tabItemTarget.Content;
 
-                tabControl.Items.Remove(tabItemSource);
-                tabControl.Items.Insert(targetIndex, tabItemSource);
+                    //int sourceIndex = list.IndexOf(source);
+                    int targetIndex = list.IndexOf(target);
 
-                tabControl.Items.Remove(tabItemTarget);
-                tabControl.Items.Insert(sourceIndex, tabItemTarget);
+                    list.Remove(source);
+                    list.Insert(targetIndex, source);
 
-                tabControl.SelectedIndex = targetIndex;
+                    tabControl.SelectedIndex = targetIndex;
+                }
+                else
+                {
+                    //int sourceIndex = tabControl.Items.IndexOf(tabItemSource);
+                    int targetIndex = tabControl.Items.IndexOf(tabItemTarget);
+
+                    tabControl.Items.Remove(tabItemSource);
+                    tabControl.Items.Insert(targetIndex, tabItemSource);
+
+                    tabControl.SelectedIndex = targetIndex;
+                }
             }
         }
 
