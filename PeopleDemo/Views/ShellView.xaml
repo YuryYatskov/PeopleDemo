@@ -11,34 +11,39 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
+        
         <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="4,2">
             <Button Content="Add people page" cal:Message.Attach="AddPage" Padding="4"></Button>
         </StackPanel>
 
-        <StackPanel Grid.Row="1" Margin="4">
-            <adc:MyTabControl ItemsSource="{Binding Pages}">
-                <adc:MyTabControl.ItemTemplate >
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Name}"></TextBlock>
-                    </DataTemplate>
-                </adc:MyTabControl.ItemTemplate>
+        <adc:MyTabControl ItemsSource="{Binding Pages}" Grid.Row="1">
+            <adc:MyTabControl.ItemTemplate >
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}"></TextBlock>
+                </DataTemplate>
+            </adc:MyTabControl.ItemTemplate>
 
-                <adc:MyTabControl.ContentTemplate >
-                    <DataTemplate  >
-                        <ContentControl cal:View.Model="{Binding}" />
-                    </DataTemplate>
-                </adc:MyTabControl.ContentTemplate>
-            </adc:MyTabControl>
+            <adc:MyTabControl.ContentTemplate >
+                <DataTemplate  >
+                    <ContentControl cal:View.Model="{Binding}" />
+                </DataTemplate>
+            </adc:MyTabControl.ContentTemplate>
+        </adc:MyTabControl>
             
-            <adc:MyTabControl>
-                <adc:MyTabItem Header="TabItem 1">Content 1</adc:MyTabItem>
-                <adc:MyTabItem Header="TabItem 2">Content 2</adc:MyTabItem>
-                <adc:MyTabItem Header="TabItem 3">Content 3</adc:MyTabItem>
-                <adc:MyTabItem Header="TabItem 4">Content 4</adc:MyTabItem>
-            </adc:MyTabControl>
-        </StackPanel>
+        <!--<adc:MyTabControl Grid.Row=2>
+            <adc:MyTabItem Header="TabItem 1">Content 1</adc:MyTabItem>
+            <adc:MyTabItem Header="TabItem 2">Content 2</adc:MyTabItem>
+            <adc:MyTabItem Header="TabItem 3">Content 3</adc:MyTabItem>
+            <adc:MyTabItem Header="TabItem 4">Content 4</adc:MyTabItem>
+        </adc:MyTabControl>-->
+
+        <adc:MyGrid Grid.Row="3">
+            <Rectangle Fill="Bisque" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+        </adc:MyGrid>
 
     </Grid>
 </Window>

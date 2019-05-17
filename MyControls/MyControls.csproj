@@ -54,8 +54,10 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MyGrid.cs" />
     <Compile Include="MyTabControl.cs" />
     <Compile Include="MyTabItem.cs" />
+    <Compile Include="Placement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

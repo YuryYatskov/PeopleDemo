@@ -1,8 +1,18 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
 
 namespace MyControls
 {
@@ -32,77 +42,78 @@ namespace MyControls
     /// Шаг 2)
     /// Теперь можно использовать элемент управления в файле XAML.
     ///
-    ///     <MyNamespace:MyTabItem/>
+    ///     <MyNamespace:MyGrid/>
     ///
     /// </summary>
-    public class MyTabItem : TabItem
+    public class MyGrid : Grid
     {
-        static MyTabItem()
+        private MyTabControl _instanceTabControl;
+
+        public MyTabControl InstanceTabControl
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(MyTabItem), new FrameworkPropertyMetadata(typeof(MyTabItem)));
+            get
+            {
+                if (_instanceTabControl == null)
+                {
+                    _instanceTabControl = new MyTabControl();
+                    _instanceTabControl.Background = Brushes.Azure;
+                    _instanceTabControl.VerticalAlignment = VerticalAlignment.Stretch;
+                    _instanceTabControl.HorizontalAlignment = HorizontalAlignment.Stretch;
+
+                    this.Children.Add(_instanceTabControl);
+                    Grid.SetRow(_instanceTabControl, 0);
+                    Grid.SetColumn(_instanceTabControl, 0);
+                }
+                return _instanceTabControl;
+            }
         }
 
-        public MyTabItem()
+        static MyGrid()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(MyGrid), new FrameworkPropertyMetadata(typeof(MyGrid)));
+        }
+
+        public MyGrid()
         {
             this.AllowDrop = true;
-            this.PreviewMouseMove += MyTabItem_PreviewMouseMove;
-            this.Drop += MyTabItem_Drop;
+            this.PreviewMouseMove += MyGrid_PreviewMouseMove;
+            this.Drop += MyGrid_Drop;
         }
 
-        private void MyTabItem_PreviewMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+
+        private void MyGrid_PreviewMouseMove(object sender, MouseEventArgs e)
         {
             if (e.Source is MyTabItem MyTabItem && Mouse.PrimaryDevice.LeftButton == MouseButtonState.Pressed)
                 DragDrop.DoDragDrop(MyTabItem, MyTabItem, DragDropEffects.All);
         }
 
-        private void MyTabItem_Drop(object sender, DragEventArgs e)
+        private void MyGrid_Drop(object sender, DragEventArgs e)
         {
-            if (GetTargetTabItem(e.OriginalSource) is MyTabItem tabItemTarget
-                && e.Data.GetData(typeof(MyTabItem)) is MyTabItem tabItemSource
-                && VisualTreeHelper.GetParent(tabItemSource) is System.Windows.Controls.Primitives.TabPanel tabPanel
-                && VisualTreeHelper.GetParent(tabPanel) is Grid grid
-                && VisualTreeHelper.GetParent(grid) is MyTabControl tabControl)
+            if (e.Data.GetData(typeof(MyTabItem)) is MyTabItem tabItemSource)
             {
+                if (InstanceTabControl.ItemsSource == null)
+                {
+                    // Here I need to create a collection of ViewModels with the type as the TabItemSource.Content.
+                }
 
-                if (tabControl.ItemsSource is IList list)
+                if (InstanceTabControl.ItemsSource is IList list)
                 {
                     var source = tabItemSource.Content;
-                    var target = tabItemTarget.Content;
-
-                    //int sourceIndex = list.IndexOf(source);
-                    int targetIndex = list.IndexOf(target);
 
                     list.Remove(source);
-                    list.Insert(targetIndex, source);
+                    list.Add(source);
 
-                    tabControl.SelectedIndex = targetIndex;
+                    InstanceTabControl.SelectedIndex = list.Count - 1;
                 }
                 else
                 {
-                    //int sourceIndex = tabControl.Items.IndexOf(tabItemSource);
-                    int targetIndex = tabControl.Items.IndexOf(tabItemTarget);
+                    InstanceTabControl.Items.Remove(tabItemSource);
+                    InstanceTabControl.Items.Add(tabItemSource);
 
-                    tabControl.Items.Remove(tabItemSource);
-                    tabControl.Items.Insert(targetIndex, tabItemSource);
-
-                    tabControl.SelectedIndex = targetIndex;
+                    InstanceTabControl.SelectedIndex = InstanceTabControl.Items.Count - 1;
                 }
+
             }
-        }
-
-        private MyTabItem GetTargetTabItem(object originalSource)
-        {
-            var dependencyObject = originalSource as DependencyObject;
-
-            while (dependencyObject != null)
-            {
-                if (dependencyObject is MyTabItem MyTabItem)
-                    return MyTabItem;
-
-                dependencyObject = VisualTreeHelper.GetParent(dependencyObject);
-            }
-
-            return null;
         }
     }
 }
