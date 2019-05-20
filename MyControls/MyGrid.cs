@@ -91,9 +91,10 @@ namespace MyControls
         {
             if (e.Data.GetData(typeof(MyTabItem)) is MyTabItem tabItemSource)
             {
-                if (InstanceTabControl.ItemsSource == null)
+                if (InstanceTabControl.ItemsSource == null && Placement.FuncGetMyTabControlItemsSource != null)
                 {
                     // Here I need to create a collection of ViewModels with the type as the TabItemSource.Content.
+                    InstanceTabControl.ItemsSource = Placement.GetMyTabControlItemsSource(Placement.FuncGetMyTabControlItemsSource);
                 }
 
                 if (InstanceTabControl.ItemsSource is IList list)

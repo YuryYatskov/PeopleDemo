@@ -1,6 +1,8 @@
 ﻿using Caliburn.Micro;
+using MyControls;
 using PeopleDemo.Models;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -19,6 +21,13 @@ namespace PeopleDemo.ViewModels
             PersonRepository.Current.Add(new PersonModel("Leonardo", "DiCaprio", new DateTime(1974, 11, 11)));
             PersonRepository.Current.Add(new PersonModel("Brad", "Pitt", new DateTime(1963, 12, 18)));
             PersonRepository.Current.Add(new PersonModel("George", "Clooney", new DateTime(1961, 5, 6)));
+
+            Placement.FuncGetMyTabControlItemsSource = GetMyTabControlItemsSource;
+        }
+
+        private IList GetMyTabControlItemsSource()
+        {
+            throw new NotImplementedException();
         }
 
         public ObservableCollection<ViewModelBase> Pages { get; set; } = new ObservableCollection<ViewModelBase>();
